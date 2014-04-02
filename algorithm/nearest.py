@@ -59,7 +59,7 @@ class Nearest(object):
 		len_ = len_inter * 1.0 / len_activ
 		self.len_t += len_
 
-		if len_ >= 0.2:    # What threshold is better ?
+		if len_ >= 0.4:    # What threshold is better ?
 			return True
 		else:
 			return False
@@ -85,8 +85,10 @@ class Nearest(object):
 		return self.nearest
 
 
+
+
 if __name__ == '__main__':
-	data_model = data.Data("/home/grzhan/Workspace/ali_bigdata/data/out.txt")
+	data_model = data.Data("/home/grzhan/Workspace/ali_bigdata/data/pre-g2.txt")
 	data_model.createRawData()
 	data_model.processRaw()
 	nearest = Nearest(data_model)

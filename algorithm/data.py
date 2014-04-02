@@ -7,7 +7,7 @@ class Data(object):
 	"""docstring for Data"""
 	def __init__(self,filename="../data/out.txt",type_="raw"):
 		super(Data, self).__init__()
-		self.filename = "../data/out.txt"
+		self.filename = filename
 		self.type = type_
 		self.count = 0
 		

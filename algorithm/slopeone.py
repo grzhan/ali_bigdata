@@ -16,6 +16,8 @@ class SlopeOne(object):
         self.nearest = {}
         self.predict_score = {}
 
+        self.strings = str()
+
 
     def test_case(self):
         self.user_item_set = {"John": {"item1","item2","item3"} , "Mark": {"item1","item2"}, "Lucy": {"item2","item3"}}
@@ -81,13 +83,13 @@ class SlopeOne(object):
 
     def addPredict(self,user,item,value):
         if value < 10:
-            return 
+            return
         predict_score = self.predict_score
         if not predict_score.has_key(user):
             predict_score[user] = dict()
         predict_score[user][item] = value
 
-    def outputPredict(self,K=10,filename='predict_score'):
+    def outputPredict(self,K=5,filename='predict_score'):
         predict_score = self.predict_score
         self.strings = str()
         filename += '_' + str(K)
@@ -95,11 +97,20 @@ class SlopeOne(object):
 
         for i in predict_score.keys():
             sort = sorted(predict_score[i].items(),key=lambda e:e[1], reverse=True)
-            l = [x[0] for x in sort]
+            max_score = sort[0][1]
+
+            #  Filter Rule
+            l = [x[0] for x in sort if x[1] < (max_score * 0.6)]
             if len(l) > K:
                 l = l[:K]
-            s = reduce(lambda x,y: x+','+str(y), l[1:],str(l[0]))
+
+            if len(l) == 0: continue
+            if len(l) > 1:
+                s = reduce(lambda x,y: x+','+str(y), l[1:],str(l[0]))
+            else:
+                s = str(l[0])
             self.strings += i + ':' + s + '\r\n'
+
         with open(filepath,'w') as filehandle:
             filehandle.write(self.strings)
 
@@ -115,10 +126,13 @@ class SlopeOne(object):
             s = filehandle.read()
             self.nearest = pickle.loads(s)
 
+    def getOutputStrings(self):
+        return self.strings
+
 
 
 if __name__ == '__main__':
-    model = data.Data("/home/grzhan/Workspace/ali_bigdata/data/out.txt")
+    model = data.Data("/home/grzhan/Workspace/ali_bigdata/data/pre-g2.txt")
     model.createRawData()
     model.processRaw()
 
